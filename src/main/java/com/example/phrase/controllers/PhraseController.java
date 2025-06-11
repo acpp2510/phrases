@@ -28,8 +28,7 @@ public class PhraseController {
     @GetMapping("/{id}")
     public Phrase getForId(@PathVariable Long id){
         return phraseService.getPhraseById(id).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND,"Phrase don´t found with ID: "+ id
-        ));
+                HttpStatus.NOT_FOUND,"Phrase don´t found with ID: "+ id));
     }
 
     @PostMapping("/create")
@@ -37,5 +36,14 @@ public class PhraseController {
         Phrase createdPhrase = phraseService.savePhrase(newPhrase);
         return new ResponseEntity<Phrase>(createdPhrase, HttpStatus.CREATED);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Phrase> updatePhrase (@PathVariable Long id, @RequestBody Phrase phraseDetails){
+        Phrase existingPhrase = phraseService.getPhraseById(id).orElseThrow(()-> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Phrase not found with ID: " + id));
+        Phrase updatedPhrase = phraseService.updatePhrase(existingPhrase, phraseDetails);
+        return new ResponseEntity<Phrase>(updatedPhrase,HttpStatus.OK);
+    }
+
 
 }
