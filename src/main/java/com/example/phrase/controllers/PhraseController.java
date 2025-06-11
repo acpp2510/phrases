@@ -45,5 +45,11 @@ public class PhraseController {
         return new ResponseEntity<Phrase>(updatedPhrase,HttpStatus.OK);
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePhrase(@PathVariable Long id) {
+        Phrase existingPhrase = phraseService.getPhraseById(id).orElseThrow(()-> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Phrase not found with ID: " + id));
+        phraseService.deletePhrase(existingPhrase);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
