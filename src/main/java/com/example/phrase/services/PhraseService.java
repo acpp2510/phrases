@@ -25,4 +25,8 @@ public class PhraseService {
     public Optional<Phrase> getPhraseById (Long id){
         return phraseRepository.findById(id);
     }
+
+    public Phrase savePhrase (Phrase newPhrase){
+        return phraseRepository.save(newPhrase);
+    }
 }
