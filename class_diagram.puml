@@ -1,0 +1,49 @@
+@startuml
+!theme materia
+
+package "com.example.phrase" {
+  class PhraseApplication
+}
+
+package "controllers" {
+  class PhraseController {
+    + getAllPhrase()
+    + getForId()
+    + addPhrase()
+    + updatePhrase()
+    + deletePhrase()
+  }
+}
+
+package "services" {
+  class PhraseService {
+    + getAllPhrases()
+    + getPhraseById()
+    + savePhrase()
+    + updatePhrase()
+    + deletePhrase()
+  }
+}
+
+package "repositories" {
+  interface PhraseRepository extends JpaRepository<Phrase, Long> {
+    // Inherits CRUD methods from JpaRepository
+  }
+}
+package "models" {
+  class Phrase {
+    - id
+    - text
+    - author
+  }
+}
+
+' Relaciones entre clases
+PhraseController --> PhraseService
+PhraseService --> PhraseRepository
+PhraseRepository --> Phrase
+PhraseController --> Phrase
+PhraseService --> Phrase
+
+@enduml
+
