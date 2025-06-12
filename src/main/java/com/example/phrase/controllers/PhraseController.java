@@ -5,10 +5,7 @@ import com.example.phrase.repositories.PhraseRepository;
 import com.example.phrase.services.PhraseService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -31,8 +28,28 @@ public class PhraseController {
     @GetMapping("/{id}")
     public Phrase getForId(@PathVariable Long id){
         return phraseService.getPhraseById(id).orElseThrow(() -> new ResponseStatusException(
-                HttpStatus.NOT_FOUND,"Phrase don´t found with ID: "+ id
-        ));
+                HttpStatus.NOT_FOUND,"Phrase don´t found with ID: "+ id));
     }
 
+    @PostMapping("/create")
+    public ResponseEntity addPhrase (@RequestBody Phrase newPhrase){
+        Phrase createdPhrase = phraseService.savePhrase(newPhrase);
+        return new ResponseEntity<Phrase>(createdPhrase, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Phrase> updatePhrase (@PathVariable Long id, @RequestBody Phrase phraseDetails){
+        Phrase existingPhrase = phraseService.getPhraseById(id).orElseThrow(()-> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "Phrase not found with ID: " + id));
+        Phrase updatedPhrase = phraseService.updatePhrase(existingPhrase, phraseDetails);
+        return new ResponseEntity<Phrase>(updatedPhrase,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePhrase(@PathVariable Long id) {
+        Phrase existingPhrase = phraseService.getPhraseById(id).orElseThrow(()-> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Phrase not found with ID: " + id));
+        phraseService.deletePhrase(existingPhrase);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
